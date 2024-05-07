@@ -19,6 +19,8 @@ import modelo.Mago;
  * @author Usuario
  */
 public class Personajes extends javax.swing.JInternalFrame {
+
+    private Clonados clonados;
     private List<Personaje> listaPersonajes = new ArrayList<>();
     List<Personaje> listaPersonajesClonados = new ArrayList<>();
 
@@ -29,11 +31,13 @@ public class Personajes extends javax.swing.JInternalFrame {
     public void setListaPersonajesClonados(List<Personaje> listaPersonajesClonados) {
         this.listaPersonajesClonados = listaPersonajesClonados;
     }
+
     /**
      * Creates new form Personajes
      */
     public Personajes() {
         initComponents();
+        this.clonados = clonados;
 
     }
 
@@ -204,13 +208,14 @@ public class Personajes extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnSeleccionarActionPerformed
 
     private void bntClonarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bntClonarActionPerformed
+
         String nombreSeleccionado = ComboBoxPersonajes.getSelectedItem().toString();
         Personaje personajeSeleccionado = null;
         for (Personaje personaje : listaPersonajes) {
-            if (personaje.getNombre().equals(nombreSeleccionado)) { 
+            if (personaje.getNombre().equals(nombreSeleccionado)) {
                 personajeSeleccionado = personaje;
                 break;
-            } 
+            }
         }
 
         if (personajeSeleccionado != null) {

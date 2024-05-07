@@ -42,7 +42,7 @@ public abstract class Personaje implements CloneablePersonaje{
         this.nombre = nombre;
         this.habilidad = habilidad;
         this.equipo = equipo;
-        //this.imagen = "src/main/imagenes";
+        this.imagen = imagen;
     }
     
     
@@ -56,6 +56,7 @@ public abstract class Personaje implements CloneablePersonaje{
         }
     }
     
-    //@Override
-    //public abstract CloneablePersonaje clonar();
+    public String getRutaImagen() {
+        return imagen;
+    }
 }

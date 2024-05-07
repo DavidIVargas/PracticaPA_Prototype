@@ -11,10 +11,12 @@ import java.util.HashMap;
 
 import java.util.List;
 import java.util.Map;
+import javax.swing.DefaultListModel;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import javax.swing.plaf.DesktopPaneUI;
 import javax.swing.table.DefaultTableModel;
 import modelo.Guerrero;
 import modelo.Mago;
@@ -26,6 +28,7 @@ import modelo.Personaje;
  */
 public class Clonados extends javax.swing.JInternalFrame {
 
+    private Clonados clonados;
     private Personajes personajes;
     private List<Mago> listaMago = new ArrayList<>();
     private List<Guerrero> listaGuerrero = new ArrayList<>();
@@ -35,6 +38,23 @@ public class Clonados extends javax.swing.JInternalFrame {
      */
     public Clonados(Personajes personajes) {
         initComponents();
+        // En el constructor de tu clase Clonados, después de initComponents()
+        jListImagenes.addListSelectionListener(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent e) {
+                if (!e.getValueIsAdjusting()) {
+                    String opcionSeleccionada = jListImagenes.getSelectedValue();
+                    String rutaImagen;
+                    if (ComboBoxPersonajes.getSelectedItem().equals("Guerreros")) {
+                        rutaImagen = obtenerRutaImagenGuerrero(opcionSeleccionada);
+                    } else {
+                        rutaImagen = obtenerRutaImagenMago(opcionSeleccionada);
+                    }
+                    ImageIcon nuevaImagenIcon = new ImageIcon(getClass().getResource(rutaImagen));
+                    jLabelImagen.setIcon(new ImageIcon(nuevaImagenIcon.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT)));
+                }
+            }
+        });
         this.personajes = personajes;
         this.mostrarComponentes(false);
     }
@@ -56,17 +76,17 @@ public class Clonados extends javax.swing.JInternalFrame {
         btnModificar = new javax.swing.JButton();
         btnEliminar = new javax.swing.JButton();
         jLabelImagen = new javax.swing.JLabel();
-        jTextField1 = new javax.swing.JTextField();
-        jTextField2 = new javax.swing.JTextField();
-        jTextField3 = new javax.swing.JTextField();
-        jTextField4 = new javax.swing.JTextField();
+        xtxNuevoNombre = new javax.swing.JTextField();
+        txtNuevaHabilidad = new javax.swing.JTextField();
+        txtNuevoEquipo = new javax.swing.JTextField();
+        txtFuerza_Encanto = new javax.swing.JTextField();
         jScrollPane2 = new javax.swing.JScrollPane();
-        jList1 = new javax.swing.JList<>();
+        jListImagenes = new javax.swing.JList<>();
         btnGuardarr = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        jLabel2 = new javax.swing.JLabel();
-        jLabel3 = new javax.swing.JLabel();
-        jLabel4 = new javax.swing.JLabel();
+        jLabelNuevoNombre = new javax.swing.JLabel();
+        jLNuevaHabilidad = new javax.swing.JLabel();
+        jLNuevoEquipo = new javax.swing.JLabel();
+        jLFuerza_Encanto = new javax.swing.JLabel();
 
         setClosable(true);
         setDefaultCloseOperation(javax.swing.WindowConstants.HIDE_ON_CLOSE);
@@ -117,12 +137,12 @@ public class Clonados extends javax.swing.JInternalFrame {
             }
         });
 
-        jList1.setModel(new javax.swing.AbstractListModel<String>() {
+        jListImagenes.setModel(new javax.swing.AbstractListModel<String>() {
             String[] strings = { "Imagen1", "Imagen2", "Imagen3", " " };
             public int getSize() { return strings.length; }
             public String getElementAt(int i) { return strings[i]; }
         });
-        jScrollPane2.setViewportView(jList1);
+        jScrollPane2.setViewportView(jListImagenes);
 
         btnGuardarr.setText("Guardar");
         btnGuardarr.addActionListener(new java.awt.event.ActionListener() {
@@ -131,17 +151,17 @@ public class Clonados extends javax.swing.JInternalFrame {
             }
         });
 
-        jLabel1.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
-        jLabel1.setText("Nuevo Nombre:");
+        jLabelNuevoNombre.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
+        jLabelNuevoNombre.setText("Nuevo Nombre:");
 
-        jLabel2.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
-        jLabel2.setText("Nueva Habilidad:");
+        jLNuevaHabilidad.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
+        jLNuevaHabilidad.setText("Nueva Habilidad:");
 
-        jLabel3.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
-        jLabel3.setText("Nuevo Equipo:");
+        jLNuevoEquipo.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
+        jLNuevoEquipo.setText("Nuevo Equipo:");
 
-        jLabel4.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
-        jLabel4.setText("Fuerza/Encanto:");
+        jLFuerza_Encanto.setFont(new java.awt.Font("Yu Gothic UI Light", 1, 14)); // NOI18N
+        jLFuerza_Encanto.setText("Fuerza/Encanto:");
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -163,21 +183,21 @@ public class Clonados extends javax.swing.JInternalFrame {
                 .addGap(18, 18, 18)
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addComponent(jLabelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 121, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(0, 221, Short.MAX_VALUE)
+                        .addComponent(jLabelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 336, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField1, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
-                                .addComponent(jTextField3))
-                            .addComponent(jLabel1)
-                            .addComponent(jLabel3))
+                                .addComponent(xtxNuevoNombre, javax.swing.GroupLayout.DEFAULT_SIZE, 156, Short.MAX_VALUE)
+                                .addComponent(txtNuevoEquipo))
+                            .addComponent(jLabelNuevoNombre)
+                            .addComponent(jLNuevoEquipo))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 225, Short.MAX_VALUE)
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jTextField2, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
-                                .addComponent(jTextField4))
-                            .addComponent(jLabel2)
-                            .addComponent(jLabel4))
+                                .addComponent(txtNuevaHabilidad, javax.swing.GroupLayout.DEFAULT_SIZE, 148, Short.MAX_VALUE)
+                                .addComponent(txtFuerza_Encanto))
+                            .addComponent(jLNuevaHabilidad)
+                            .addComponent(jLFuerza_Encanto))
                         .addGap(51, 51, 51))
                     .addGroup(jPanel1Layout.createSequentialGroup()
                         .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -190,33 +210,6 @@ public class Clonados extends javax.swing.JInternalFrame {
             .addGroup(jPanel1Layout.createSequentialGroup()
                 .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(jPanel1Layout.createSequentialGroup()
-                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addGap(74, 74, 74)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel1)
-                                    .addComponent(jLabel2))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jTextField1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField2, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(24, 24, 24)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel3)
-                                    .addComponent(jLabel4))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jTextField3, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(jTextField4, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(0, 141, Short.MAX_VALUE))
-                            .addGroup(jPanel1Layout.createSequentialGroup()
-                                .addComponent(jLabelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 107, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(18, 18, 18)
-                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnGuardarr, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(12, 12, 12))
-                    .addGroup(jPanel1Layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(ComboBoxPersonajes, javax.swing.GroupLayout.PREFERRED_SIZE, 36, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -225,8 +218,35 @@ public class Clonados extends javax.swing.JInternalFrame {
                         .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(btnMostrar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(btnModificar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addContainerGap(167, Short.MAX_VALUE))
+                            .addComponent(btnEliminar, javax.swing.GroupLayout.PREFERRED_SIZE, 41, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(0, 0, Short.MAX_VALUE)
+                                .addComponent(jLabelImagen, javax.swing.GroupLayout.PREFERRED_SIZE, 301, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jScrollPane2, javax.swing.GroupLayout.PREFERRED_SIZE, 66, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGap(74, 74, 74)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLabelNuevoNombre)
+                                    .addComponent(jLNuevaHabilidad))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(xtxNuevoNombre, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtNuevaHabilidad, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(24, 24, 24)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(jLNuevoEquipo)
+                                    .addComponent(jLFuerza_Encanto))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(txtNuevoEquipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtFuerza_Encanto, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 147, Short.MAX_VALUE)
+                                .addComponent(btnGuardarr, javax.swing.GroupLayout.PREFERRED_SIZE, 48, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(12, 12, 12)))
+                .addContainerGap(229, Short.MAX_VALUE))
         );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -244,35 +264,90 @@ public class Clonados extends javax.swing.JInternalFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btnEliminarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEliminarActionPerformed
-        jTable1.remove(this);
+        eliminarPersonaje();
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
+        
         int indiceSeleccionado = jTable1.getSelectedRow();
-        this.jLabelImagen.setIcon(frameIcon);
+        
         if (indiceSeleccionado != -1) {
-            String opcionSeleccionada = ComboBoxPersonajes.getSelectedItem().toString();
             Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
-            String rutaImagen = personajeSeleccionado.getImagen();
-            URL imageUrl = getClass().getResource(rutaImagen);
-            if (imageUrl != null) {
-                ImageIcon originalIcon = new ImageIcon(imageUrl);
-                ImageIcon icon = new ImageIcon(originalIcon.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
+            mostrarImagen(personajeSeleccionado);
+            actualizarTabla(true);
+            String opcionSeleccionada = ComboBoxPersonajes.getSelectedItem().toString();
+            if (opcionSeleccionada.equals("Guerreros")) {
+                ImageIcon guerrero = new ImageIcon(getClass().getResource("/images/img_guerrero_1.jpeg"));
+                ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
                 jLabelImagen.setIcon(icon);
-            } else {
-                JOptionPane.showMessageDialog(this, "No se pudo cargar la imagen", "Error", JOptionPane.ERROR_MESSAGE);
+                
+                // Actualizar la tabla con los datos de los guerreros
+                actualizarTablaGuerreros();
+            } else if (opcionSeleccionada.equals("Magos")) {
+                ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_1.jpeg"));
+                ImageIcon icon2 = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
+                jLabelImagen.setIcon(icon2);
+                // Actualizar la tabla con los datos de los magos
+                actualizarTabla(true);
+                actualizarTablaMagos();
             }
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
         }
+        /*
+        
+        int indiceSeleccionado = jTable1.getSelectedRow();
+        
+        if (indiceSeleccionado != -1) {
+            Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+            mostrarImagen(personajeSeleccionado);
+            actualizarTabla(true);
+            actualizarTablaGuerreros();
+            
+            limpiarCampos();
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+         
+        if (jListImagenes.isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(this, "Seleccione una imagen", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        if (ComboBoxPersonajes.getSelectedItem().equals("Guerreros")) {
+            modificarPersonaje();
+            actualizarTablaGuerreros(); // Actualizar tabla de guerreros después de modificar
+        } else if (ComboBoxPersonajes.getSelectedItem().equals("Magos")) {
+            modificarPersonaje();
+            actualizarTablaMagos(); // Actualizar tabla de magos después de modificar
+            limpiarCampos();
+        }
+
+        int indiceSeleccionado = jTable1.getSelectedRow();
+        if (indiceSeleccionado != -1) {
+            Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+            mostrarImagen(personajeSeleccionado);
+            String opcionSeleccionada = ComboBoxPersonajes.getSelectedItem().toString();
+            if (opcionSeleccionada.equals("Guerreros")) {
+                ImageIcon guerrero = new ImageIcon(getClass().getResource("/images/img_guerrero_1.jpeg"));
+                ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
+                jLabelImagen.setIcon(icon);
+                // Actualizar la tabla con los datos de los guerreros
+                actualizarTablaGuerreros();
+            } else if (opcionSeleccionada.equals("Magos")) {
+                ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_1.jpeg"));
+                ImageIcon icon2 = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
+                jLabelImagen.setIcon(icon2);
+                // Actualizar la tabla con los datos de los magos
+                actualizarTablaMagos();
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
+        }*/
     }//GEN-LAST:event_btnMostrarActionPerformed
 
     private void ComboBoxPersonajesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxPersonajesActionPerformed
-        
-        this.mostrarComponentes(false);
-        this.ComboBoxPersonajes.getSelectedIndex();
-        jLabelImagen.setIcon(frameIcon);
-        this.mostarImagen();
+
         String opcionSeleccionada = ComboBoxPersonajes.getSelectedItem().toString();
 
         if (opcionSeleccionada.equals("Guerreros")) {
@@ -285,11 +360,63 @@ public class Clonados extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_ComboBoxPersonajesActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
-        this.mostrarComponentes(true);
+        int indiceSeleccionado = jTable1.getSelectedRow();
+        if (indiceSeleccionado != -1) {
+            mostrarComponentes(true);
+            // Obtener el personaje clonado seleccionado
+            Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+            // Mostrar los datos del personaje seleccionado en los campos correspondientes
+            xtxNuevoNombre.setText(personajeSeleccionado.getNombre());
+            txtNuevaHabilidad.setText(personajeSeleccionado.getHabilidad());
+            txtNuevoEquipo.setText(personajeSeleccionado.getEquipo());
+            // Si es un Guerrero, mostrar la fuerza y cargar las imágenes disponibles en el JList
+            if (personajeSeleccionado instanceof Guerrero) {
+                jLFuerza_Encanto.setText("Fuerza:");
+                txtFuerza_Encanto.setText(String.valueOf(((Guerrero) personajeSeleccionado).getFuerza()));
+                // Agregar imágenes disponibles al JList
+                DefaultListModel<String> model = new DefaultListModel<>();
+                model.addElement("Imagen1");
+                model.addElement("Imagen2");
+                model.addElement("Imagen3");
+                jListImagenes.setModel(model);
+            } // Si es un Mago, mostrar el encanto y cargar las imágenes disponibles en el JList
+            else if (personajeSeleccionado instanceof Mago) {
+                jLFuerza_Encanto.setText("Encanto:");
+                txtFuerza_Encanto.setText(((Mago) personajeSeleccionado).getEncanto());
+                // Agregar imágenes disponibles al JList
+                DefaultListModel<String> model = new DefaultListModel<>();
+                model.addElement("Imagen1");
+                model.addElement("Imagen2");
+                model.addElement("Imagen3");
+                jListImagenes.setModel(model);
+            }
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
+            limpiarCampos();
+        }
     }//GEN-LAST:event_btnModificarActionPerformed
 
     private void btnGuardarrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGuardarrActionPerformed
-        this.modificarPersonaje();
+        if (jListImagenes.isSelectionEmpty()) {
+            JOptionPane.showMessageDialog(this, "Seleccione una imagen", "Error", JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        int indiceSeleccionado = jTable1.getSelectedRow();
+        if (indiceSeleccionado != -1) {
+            Personaje personajeClonado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+            String opcion = jListImagenes.getSelectedValue();
+            if (personajeClonado instanceof Guerrero) {
+                String nuevaImagen = obtenerRutaImagenGuerrero(opcion);
+                personajeClonado.setImagen(nuevaImagen);
+            } else if (personajeClonado instanceof Mago) {
+                String nuevaImagen = obtenerRutaImagenMago(opcion);
+                personajeClonado.setImagen(nuevaImagen);
+            }
+            // Aquí puedes agregar cualquier otra lógica que necesites para guardar otros atributos del personaje clonado
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
+        }
     }//GEN-LAST:event_btnGuardarrActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
@@ -298,20 +425,20 @@ public class Clonados extends javax.swing.JInternalFrame {
     private javax.swing.JButton btnGuardarr;
     private javax.swing.JButton btnModificar;
     private javax.swing.JButton btnMostrar;
-    private javax.swing.JLabel jLabel1;
-    private javax.swing.JLabel jLabel2;
-    private javax.swing.JLabel jLabel3;
-    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLFuerza_Encanto;
+    private javax.swing.JLabel jLNuevaHabilidad;
+    private javax.swing.JLabel jLNuevoEquipo;
     private javax.swing.JLabel jLabelImagen;
-    private javax.swing.JList<String> jList1;
+    private javax.swing.JLabel jLabelNuevoNombre;
+    private javax.swing.JList<String> jListImagenes;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JTable jTable1;
-    private javax.swing.JTextField jTextField1;
-    private javax.swing.JTextField jTextField2;
-    private javax.swing.JTextField jTextField3;
-    private javax.swing.JTextField jTextField4;
+    private javax.swing.JTextField txtFuerza_Encanto;
+    private javax.swing.JTextField txtNuevaHabilidad;
+    private javax.swing.JTextField txtNuevoEquipo;
+    private javax.swing.JTextField xtxNuevoNombre;
     // End of variables declaration//GEN-END:variables
 
     private void eliminarPersonaje() {
@@ -331,76 +458,72 @@ public class Clonados extends javax.swing.JInternalFrame {
     }
 
     private void mostrarComponentes(Boolean co) {
-        jTextField1.setVisible(co);
-        jTextField2.setVisible(co);
-        jTextField3.setVisible(co);
-        jTextField4.setVisible(co);
-        jLabel1.setVisible(co);
-        jLabel2.setVisible(co);
-        jLabel3.setVisible(co);
-        jLabel4.setVisible(co);
-        jList1.setVisible(co);
+        xtxNuevoNombre.setVisible(co);
+
+        txtNuevaHabilidad.setVisible(co);
+        txtNuevoEquipo.setVisible(co);
+        txtFuerza_Encanto.setVisible(co);
+        jLabelNuevoNombre.setVisible(co);
+        jLNuevaHabilidad.setVisible(co);
+        jLNuevoEquipo.setVisible(co);
+        jLFuerza_Encanto.setVisible(co);
+        jListImagenes.setVisible(co);
         btnGuardarr.setVisible(co);
     }
 
+    /*
     private void modificarPersonaje() {
         int indiceSeleccionado = jTable1.getSelectedRow();
-
         if (indiceSeleccionado != -1) {
+            // Obtener el personaje clonado seleccionado
             Personaje personajeClonado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+            // Actualizar los datos del personaje clonado según el tipo (Guerrero o Mago)
             if (personajeClonado instanceof Guerrero) {
-                personajeClonado.setNombre(jTextField1.getText());
-                personajeClonado.setEquipo(jTextField2.getText());
-                personajeClonado.setHabilidad(jTextField3.getText());
-                ((Guerrero) personajeClonado).setFuerza(Integer.parseInt(jTextField4.getText()));
-                String opcion = jList1.getSelectedValue();
-                if (opcion.equalsIgnoreCase("Imagen1")) {
-                    ImageIcon guerrero = new ImageIcon(getClass().getResource("/images/img_guerrero_1.jpeg"));
-                    ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                    String nuevaImagen = "/images/img_guerrero_2.jpeg";
-                    personajeClonado.setImagen(nuevaImagen);
-                } else if (opcion.equalsIgnoreCase("Imagen2")) {
-                    ImageIcon guerrero = new ImageIcon(getClass().getResource("/images/img_guerrero_2.jpeg"));
-                    ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                    String nuevaImagen = "/images/img_guerrero_2.jpeg";
-                    personajeClonado.setImagen(nuevaImagen);
-                } else if (opcion.equalsIgnoreCase("Imagen3")) {
-                    ImageIcon guerrero = new ImageIcon(getClass().getResource("/imagenes/img_guerrero_3.jpeg"));
-                    ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                    String nuevaImagen = "/images/img_guerrero_3.jpeg";
-                    personajeClonado.setImagen(nuevaImagen);
-                }
+                personajeClonado.setNombre(xtxNuevoNombre.getText());
+                personajeClonado.setHabilidad(txtNuevaHabilidad.getText());
+                personajeClonado.setEquipo(txtNuevoEquipo.getText());
+                ((Guerrero) personajeClonado).setFuerza(Integer.parseInt(txtFuerza_Encanto.getText()));
             } else if (personajeClonado instanceof Mago) {
-                System.out.println("mago");
-                personajeClonado.setNombre(jTextField1.getText());
-                personajeClonado.setEquipo(jTextField2.getText());
-                personajeClonado.setHabilidad(jTextField3.getText());
-                ((Mago) personajeClonado).setEncanto(jTextField4.getText());
-                String opcion = jList1.getSelectedValue();
-                if (opcion.equalsIgnoreCase("Imagen1")) {
-                    ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_1.jpeg"));
-                    ImageIcon icon = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                    String nuevaImagen = "/images/img_mago_1.jpeg";
-                    personajeClonado.setImagen(nuevaImagen);
-                } else if (opcion.equalsIgnoreCase("Imagen2")) {
-                    ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_3.jpeg"));
-                    ImageIcon icon = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                    String nuevaImagen = "/images/img_mago_3.jpeg";
-                    personajeClonado.setImagen(nuevaImagen);
-                } else if (opcion.equalsIgnoreCase("Imagen3")) {
-                    ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_3.jpg"));
-                    ImageIcon icon = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                    String nuevaImagen = "/images/img_mago_3.jpg";
-                    personajeClonado.setImagen(nuevaImagen);
-                }
+                personajeClonado.setNombre(xtxNuevoNombre.getText());
+                personajeClonado.setHabilidad(txtNuevaHabilidad.getText());
+                personajeClonado.setEquipo(txtNuevoEquipo.getText());
+                ((Mago) personajeClonado).setEncanto(txtFuerza_Encanto.getText());
             }
+            // Actualizar la tabla con los datos modificados
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            modelo.setValueAt(personajeClonado.getNombre(), indiceSeleccionado, 0);
+            modelo.setValueAt(personajeClonado.getHabilidad(), indiceSeleccionado, 1);
+            modelo.setValueAt(personajeClonado.getEquipo(), indiceSeleccionado, 2);
+            jTable1.setModel(modelo);
+            // Ocultar los componentes de modificación después de guardar
+            mostrarComponentes(false);
+        } else {
+            JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }*/
+    private String obtenerRutaImagenGuerrero(String opcion) {
+        switch (opcion) {
+            case "Imagen1":
+                return "/images/img_guerrero_2.jpeg";
+            case "Imagen2":
+                return "/images/img_guerrero_3.jpeg";
+            case "Imagen3":
+                return "/images/img_guerrero_4.jpeg";
+            default:
+                return ""; // Devolver una ruta vacía si no se selecciona ninguna imagen
+        }
+    }
 
+    private String obtenerRutaImagenMago(String opcion) {
+        switch (opcion) {
+            case "Imagen1":
+                return "/images/img_mago_2.jpeg";
+            case "Imagen2":
+                return "/images/img_mago_3.jpeg";
+            case "Imagen3":
+                return "/images/img_mago_4.jpeg";
+            default:
+                return ""; // Devolver una ruta vacía si no se selecciona ninguna imagen
         }
     }
 
@@ -411,76 +534,133 @@ public class Clonados extends javax.swing.JInternalFrame {
         jTable1.setModel(modelo);
     }
 
-    private void mostarImagen() {
-        int indiceSeleccionado = jTable1.getSelectedRow();
-        if (indiceSeleccionado != -1) {
-            String opcionSeleccionada = ComboBoxPersonajes.getSelectedItem().toString();
-            Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+    /*
+    private void mostrarImagen(Personaje personajeSeleccionado) {
+        if (personajeSeleccionado != null) {
+            String rutaImagen = personajeSeleccionado.getImagen(); // Obtener la ruta de la imagen del personaje
+            ImageIcon icono = new ImageIcon(getClass().getResource(rutaImagen));
+            if (icono != null) {
+                ImageIcon guerrero = new ImageIcon(getClass().getResource("/images/img_guerrero_1.jpeg"));
+                ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
+                jLabelImagen.setIcon(icon);
+                ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_1.jpeg"));
+                ImageIcon icon2 = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
+                jLabelImagen.setIcon(icon2);
 
-            if (opcionSeleccionada.equals("Guerreros")) {
-                String rutaImagen = personajeSeleccionado.getImagen();
-                URL imageUrl = getClass().getResource(rutaImagen);
-                if (imageUrl != null) {
-                    ImageIcon originalIcon = new ImageIcon(imageUrl);
-                    ImageIcon icon = new ImageIcon(originalIcon.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo cargar la imagen", "Error", JOptionPane.ERROR_MESSAGE);
-                }
-            } else if (opcionSeleccionada.equals("Magos")) {
-                String rutaImagen = personajeSeleccionado.getImagen();
-                URL imageUrl = getClass().getResource(rutaImagen);
-                if (imageUrl != null) {
-                    ImageIcon originalIcon = new ImageIcon(imageUrl);
-                    ImageIcon icon = new ImageIcon(originalIcon.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                    jLabelImagen.setIcon(icon);
-                } else {
-                    JOptionPane.showMessageDialog(this, "No se pudo cargar la imagen", "Error", JOptionPane.ERROR_MESSAGE);
-                }
+            } else {
+                jLabelImagen.setIcon(null); // Si la imagen no se encuentra, establecer el icono a null
             }
+        } else {
+            jLabelImagen.setIcon(null); // Si no se selecciona ningún personaje, establecer el icono a null
+        }
+    }
+     */
+    private void mostrarImagen(Personaje personajeSeleccionado) {
+        if (personajeSeleccionado != null) {
+            String rutaImagen = personajeSeleccionado.getImagen(); // Obtener la ruta de la imagen del personaje
+            ImageIcon icono = new ImageIcon(getClass().getResource(rutaImagen));
+            if (icono != null) {
+                // Mostrar la imagen del personaje seleccionado
+                ImageIcon icon = new ImageIcon(icono.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
+                jLabelImagen.setIcon(icon);
+            } else {
+                jLabelImagen.setIcon(null); // Si la imagen no se encuentra, establecer el icono a null
+            }
+        } else {
+            jLabelImagen.setIcon(null); // Si no se selecciona ningún personaje, establecer el icono a null
         }
     }
 
+    private void actualizarTabla(boolean mostrarGuerreros) {
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.addColumn("Nombre");
+        modelo.addColumn("Habilidad");
+        modelo.addColumn("Equipo");
+        modelo.addColumn(mostrarGuerreros ? "Fuerza" : "Encanto");
+
+        List<Personaje> listaPersonajesClonados = personajes.getListaPersonajesClonados();
+
+        for (Personaje personajeClonado : listaPersonajesClonados) {
+            if ((mostrarGuerreros && personajeClonado instanceof Guerrero)
+                    || (!mostrarGuerreros && personajeClonado instanceof Mago)) {
+                Object[] rowData = {
+                    personajeClonado.getNombre(),
+                    personajeClonado.getHabilidad(),
+                    personajeClonado.getEquipo(),
+                    mostrarGuerreros ? ((Guerrero) personajeClonado).getFuerza() : ((Mago) personajeClonado).getEncanto()
+                };
+                modelo.addRow(rowData);
+            }
+        }
+
+        jTable1.setModel(modelo);
+    }
+
+// Llamada para mostrar los guerreros
     private void actualizarTablaGuerreros() {
-        DefaultTableModel modelo = (DefaultTableModel) this.jTable1.getModel();
-        modelo.setNumRows(0); // Limpiar el modelo antes de agregar nuevas filas
-
-        List<Personaje> listaPersonajesClonados = personajes.getListaPersonajesClonados();
-
-        for (Personaje personajeClonado : listaPersonajesClonados) {
-            if (personajeClonado instanceof Guerrero) {
-                listaGuerrero.add((Guerrero) personajeClonado);
-                int fuerza = ((Guerrero) personajeClonado).getFuerza();
-                String nombre = personajeClonado.getNombre();
-                String habilidad = personajeClonado.getHabilidad();
-                String equipo = personajeClonado.getEquipo();
-                Object[] rowData = {fuerza, nombre, habilidad, equipo};
-                modelo.addRow(rowData);
-            }
-        }
-
-        this.jTable1.setModel(modelo);
+        actualizarTabla(true);
     }
 
+// Llamada para mostrar los magos
     private void actualizarTablaMagos() {
-        DefaultTableModel modelo = (DefaultTableModel) this.jTable1.getModel();
-        modelo.setNumRows(0); // Limpiar el modelo antes de agregar nuevas filas
+        actualizarTabla(false);
+    }
 
-        List<Personaje> listaPersonajesClonados = personajes.getListaPersonajesClonados();
+    private void limpiarCampos() {
+        xtxNuevoNombre.setText("");
+        txtNuevaHabilidad.setText("");
+        txtNuevoEquipo.setText("");
+        txtFuerza_Encanto.setText("");
+    }
 
-        for (Personaje personajeClonado : listaPersonajesClonados) {
-            if (personajeClonado instanceof Mago) {
-                listaMago.add((Mago) personajeClonado);
-                String encanto = ((Mago) personajeClonado).getEncanto();
-                String nombreM = personajeClonado.getNombre();
-                String habilidad = personajeClonado.getHabilidad();
-                String equipo = personajeClonado.getEquipo();
-                Object[] rowData = {encanto, nombreM, habilidad, equipo};
-                modelo.addRow(rowData);
+    private void modificarPersonaje() {
+        int indiceSeleccionado = jTable1.getSelectedRow();
+
+        if (indiceSeleccionado != -1) {
+            Personaje personajeClonado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+            String opcion = jListImagenes.getSelectedValue();
+            if (personajeClonado instanceof Guerrero) {
+                String nuevaImagen = obtenerRutaImagenGuerrero(opcion);
+                personajeClonado.setImagen(nuevaImagen);
+            } else if (personajeClonado instanceof Mago) {
+                String nuevaImagen = obtenerRutaImagenMago(opcion);
+                personajeClonado.setImagen(nuevaImagen);
+            }
+            // Verificar si el personaje es un Guerrero
+            if (personajeClonado instanceof Guerrero) {
+                Guerrero guerrero = (Guerrero) personajeClonado;
+                guerrero.setNombre(xtxNuevoNombre.getText());
+                guerrero.setEquipo(txtNuevaHabilidad.getText());
+                guerrero.setHabilidad(txtNuevoEquipo.getText());
+                // Convertir el texto de fuerza a entero solo si no está vacío
+                if (!txtFuerza_Encanto.getText().isEmpty()) {
+                    guerrero.setFuerza(Integer.parseInt(txtFuerza_Encanto.getText()));
+                }
+
+                // Actualizar la imagen del guerrero según la selección en el JList
+                String nuevaImagen = obtenerRutaImagenGuerrero(opcion);
+                personajeClonado.setImagen(nuevaImagen);
+
+                // Mostrar la imagen del guerrero actualizada
+                ImageIcon guerreroIcon = new ImageIcon(getClass().getResource(nuevaImagen));
+                jLabelImagen.setIcon(new ImageIcon(guerreroIcon.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT)));
+            } // Verificar si el personaje es un Mago
+            else if (personajeClonado instanceof Mago) {
+                Mago mago = (Mago) personajeClonado;
+                mago.setNombre(xtxNuevoNombre.getText());
+                mago.setEquipo(txtNuevaHabilidad.getText());
+                mago.setHabilidad(txtNuevoEquipo.getText());
+                // No es necesario convertir el texto de encanto a entero, ya que es un String
+
+                // Actualizar la imagen del mago según la selección en el JList
+                String nuevaImagen = obtenerRutaImagenMago(opcion);
+                personajeClonado.setImagen(nuevaImagen);
+
+                // Mostrar la imagen del mago actualizada
+                ImageIcon magoIcon = new ImageIcon(getClass().getResource(nuevaImagen));
+                jLabelImagen.setIcon(new ImageIcon(magoIcon.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT)));
             }
         }
-
-        this.jTable1.setModel(modelo);
     }
 
 }
