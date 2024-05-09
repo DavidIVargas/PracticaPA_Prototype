@@ -30,6 +30,7 @@ public class Clonados extends javax.swing.JInternalFrame {
 
     private Clonados clonados;
     private Personajes personajes;
+    private Personaje personaje;
     private List<Mago> listaMago = new ArrayList<>();
     private List<Guerrero> listaGuerrero = new ArrayList<>();
 
@@ -268,82 +269,24 @@ public class Clonados extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_btnEliminarActionPerformed
 
     private void btnMostrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMostrarActionPerformed
-        
         int indiceSeleccionado = jTable1.getSelectedRow();
-        
-        if (indiceSeleccionado != -1) {
-            Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
-            mostrarImagen(personajeSeleccionado);
-            actualizarTabla(true);
-            String opcionSeleccionada = ComboBoxPersonajes.getSelectedItem().toString();
-            if (opcionSeleccionada.equals("Guerreros")) {
-                ImageIcon guerrero = new ImageIcon(getClass().getResource("/images/img_guerrero_1.jpeg"));
-                ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                jLabelImagen.setIcon(icon);
-                
-                // Actualizar la tabla con los datos de los guerreros
-                actualizarTablaGuerreros();
-            } else if (opcionSeleccionada.equals("Magos")) {
-                ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_1.jpeg"));
-                ImageIcon icon2 = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                jLabelImagen.setIcon(icon2);
-                // Actualizar la tabla con los datos de los magos
-                actualizarTabla(true);
-                actualizarTablaMagos();
-            }
-        } else {
-            JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-        /*
-        
-        int indiceSeleccionado = jTable1.getSelectedRow();
-        
-        if (indiceSeleccionado != -1) {
-            Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
-            mostrarImagen(personajeSeleccionado);
-            actualizarTabla(true);
-            actualizarTablaGuerreros();
-            
-            limpiarCampos();
-        } else {
-            JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-         
-        if (jListImagenes.isSelectionEmpty()) {
-            JOptionPane.showMessageDialog(this, "Seleccione una imagen", "Error", JOptionPane.ERROR_MESSAGE);
-            return;
-        }
 
-        if (ComboBoxPersonajes.getSelectedItem().equals("Guerreros")) {
-            modificarPersonaje();
-            actualizarTablaGuerreros(); // Actualizar tabla de guerreros después de modificar
-        } else if (ComboBoxPersonajes.getSelectedItem().equals("Magos")) {
-            modificarPersonaje();
-            actualizarTablaMagos(); // Actualizar tabla de magos después de modificar
-            limpiarCampos();
-        }
-
-        int indiceSeleccionado = jTable1.getSelectedRow();
         if (indiceSeleccionado != -1) {
+            // Obtiene el personaje seleccionado de la lista
             Personaje personajeSeleccionado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
+
+            // Muestra la imagen del personaje
             mostrarImagen(personajeSeleccionado);
-            String opcionSeleccionada = ComboBoxPersonajes.getSelectedItem().toString();
-            if (opcionSeleccionada.equals("Guerreros")) {
-                ImageIcon guerrero = new ImageIcon(getClass().getResource("/images/img_guerrero_1.jpeg"));
-                ImageIcon icon = new ImageIcon(guerrero.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                jLabelImagen.setIcon(icon);
-                // Actualizar la tabla con los datos de los guerreros
-                actualizarTablaGuerreros();
-            } else if (opcionSeleccionada.equals("Magos")) {
-                ImageIcon mago = new ImageIcon(getClass().getResource("/images/img_mago_1.jpeg"));
-                ImageIcon icon2 = new ImageIcon(mago.getImage().getScaledInstance(jLabelImagen.getWidth(), jLabelImagen.getHeight(), Image.SCALE_DEFAULT));
-                jLabelImagen.setIcon(icon2);
-                // Actualizar la tabla con los datos de los magos
-                actualizarTablaMagos();
-            }
+
+            // Actualiza la tabla con los datos del personaje
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            modelo.setValueAt(personajeSeleccionado.getNombre(), indiceSeleccionado, 0);
+            modelo.setValueAt(personajeSeleccionado.getHabilidad(), indiceSeleccionado, 1);
+            modelo.setValueAt(personajeSeleccionado.getEquipo(), indiceSeleccionado, 2);
+            jTable1.setModel(modelo);
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
-        }*/
+        }
     }//GEN-LAST:event_btnMostrarActionPerformed
 
     private void ComboBoxPersonajesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_ComboBoxPersonajesActionPerformed
@@ -360,6 +303,7 @@ public class Clonados extends javax.swing.JInternalFrame {
     }//GEN-LAST:event_ComboBoxPersonajesActionPerformed
 
     private void btnModificarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnModificarActionPerformed
+
         int indiceSeleccionado = jTable1.getSelectedRow();
         if (indiceSeleccionado != -1) {
             mostrarComponentes(true);
@@ -404,16 +348,43 @@ public class Clonados extends javax.swing.JInternalFrame {
 
         int indiceSeleccionado = jTable1.getSelectedRow();
         if (indiceSeleccionado != -1) {
+            // Obtén el objeto del personaje seleccionado
             Personaje personajeClonado = personajes.getListaPersonajesClonados().get(indiceSeleccionado);
             String opcion = jListImagenes.getSelectedValue();
+
+            // Guarda la nueva imagen en el objeto del personaje
             if (personajeClonado instanceof Guerrero) {
                 String nuevaImagen = obtenerRutaImagenGuerrero(opcion);
                 personajeClonado.setImagen(nuevaImagen);
+                ((Guerrero) personajeClonado).setNombre(xtxNuevoNombre.getText());
+                ((Guerrero) personajeClonado).setHabilidad(txtNuevaHabilidad.getText());
+                ((Guerrero) personajeClonado).setEquipo(txtNuevoEquipo.getText());
+                // Si es un Guerrero, también actualiza la fuerza si se ingresó un nuevo valor
+                if (!txtFuerza_Encanto.getText().isEmpty()) {
+                    ((Guerrero) personajeClonado).setFuerza(Integer.parseInt(txtFuerza_Encanto.getText()));
+                }
             } else if (personajeClonado instanceof Mago) {
-                String nuevaImagen = obtenerRutaImagenMago(opcion);
-                personajeClonado.setImagen(nuevaImagen);
+                String nuevaImagenMago = obtenerRutaImagenMago(opcion);
+                personajeClonado.setImagen(nuevaImagenMago);
+                ((Mago) personajeClonado).setNombre(xtxNuevoNombre.getText());
+                ((Mago) personajeClonado).setHabilidad(txtNuevaHabilidad.getText());
+                ((Mago) personajeClonado).setEquipo(txtNuevoEquipo.getText());
+                ((Mago) personajeClonado).setEncanto(txtFuerza_Encanto.getText());
             }
-            // Aquí puedes agregar cualquier otra lógica que necesites para guardar otros atributos del personaje clonado
+
+            // Actualiza los datos del personaje en la tabla
+            DefaultTableModel modelo = (DefaultTableModel) jTable1.getModel();
+            modelo.setValueAt(xtxNuevoNombre.getText(), indiceSeleccionado, 0);
+            modelo.setValueAt(txtNuevaHabilidad.getText(), indiceSeleccionado, 1);
+            modelo.setValueAt(txtNuevoEquipo.getText(), indiceSeleccionado, 2);
+            jTable1.setModel(modelo);
+
+            // Limpia los campos y oculta componentes después de guardar
+            limpiarCampos();
+            mostrarComponentes(true);
+
+            // Muestra un mensaje de éxito
+            JOptionPane.showMessageDialog(this, "Los cambios se han guardado exitosamente", "Éxito", JOptionPane.INFORMATION_MESSAGE);
         } else {
             JOptionPane.showMessageDialog(this, "Seleccione un personaje de la tabla", "Error", JOptionPane.ERROR_MESSAGE);
         }
@@ -650,7 +621,6 @@ public class Clonados extends javax.swing.JInternalFrame {
                 mago.setNombre(xtxNuevoNombre.getText());
                 mago.setEquipo(txtNuevaHabilidad.getText());
                 mago.setHabilidad(txtNuevoEquipo.getText());
-                // No es necesario convertir el texto de encanto a entero, ya que es un String
 
                 // Actualizar la imagen del mago según la selección en el JList
                 String nuevaImagen = obtenerRutaImagenMago(opcion);
